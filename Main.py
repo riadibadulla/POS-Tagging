@@ -8,9 +8,12 @@ probability = Probabilities.Probabilities()
 sentence = brown.tagged_sents(tagset='universal')
 
 #self.allWords = [w for (w,_) in self.emitted]
-#print(len(sentence))
+print(sentence[51605])
 
-print(probability.getEmissionProbability("Georgia","NOUN"))
-print(probability.getTransitionProbability("NOUN","DET"))
+#print(probability.getEmissionProbability("game","NOUN"))
+#print(probability.getTransitionProbability("NOUN","DET"))
 
+import ViterbiTagging
+#ViterbiTagging.printEmissionProbabilities(probability,sentence[51605])
+ViterbiTagging.printTransitionProbabilities(probability)
 
