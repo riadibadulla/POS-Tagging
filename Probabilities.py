@@ -5,7 +5,7 @@ class Probabilities:
     emitted = []
     tags = []
     tagsTupples = []
-    uniqieTags = []
+    uniqueTags = []
     allWords = []
 
     emissionProbability = {}
@@ -14,31 +14,38 @@ class Probabilities:
     def show_sent(self, sent):
         print(sent)
 
-    def __init__(self):
-        sentence = brown.tagged_sents(tagset='universal')[0]
-        self.allWords = [w for (w,_) in sentence]
-        self.emitted = sentence[0]
-        self.tags = [t for (_,t) in self.emitted]
-        for i in range(len(self.tags)-1):
-            self.tagsTupples.append((self.tags[i],self.tags[i+1]))
-        uniqieTags = set(tags)
-    
-    
     def createEmissionProbabilities(self):
         smoothed = {}
         words = []
-        for tag in uniquesTags:
-            words = [w for (w,t) in emitted if t == tag]
+        for tag in self.uniqueTags:
+            words = [w for (w,t) in self.emitted if t == tag]
             smoothed[tag] = WittenBellProbDist(FreqDist(words), bins=1e5)
-        emissionProbability = smoothed
-        return smoothed
+        self.emissionProbability = smoothed
 
     def createTransitionProbabilities(self):
         smoothed = {}
-        for tag in tags:
+        for tag in self.tags:
             print(tag)
-            words = [w for (t,w) in tagsTupples if t == tag]
+            words = [w for (t,w) in self.tagsTupples if t == tag]
             smoothed[tag] = WittenBellProbDist(FreqDist(words), bins=1e5)
-        print('prob of N -> Det',smoothed['DET'].prob('NOUN'))
-        transitionProbability = smoothed
-        return smoothed
+        self.transitionProbability = smoothed
+
+    def __init__(self):
+        sentence = brown.tagged_sents(tagset='universal')
+        self.emitted = sentence[0]
+        self.allWords = [w for (w,_) in self.emitted]
+        self.tags = [t for (_,t) in self.emitted]
+        for i in range(len(self.tags)-1):
+            self.tagsTupples.append((self.tags[i],self.tags[i+1]))
+        self.uniqueTags = set(self.tags)
+
+        self.createEmissionProbabilities()
+        self.createTransitionProbabilities()
+    
+
+
+    def getEmissionProbability(self,word, tag):
+        return self.emissionProbability[tag].prob(word)
+    
+    def getTransitionProbability(self,tag, previousTag):
+        return self.transitionProbability[previousTag].prob(tag)

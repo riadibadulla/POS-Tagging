@@ -4,7 +4,9 @@ import os
 import Probabilities
 os.system('clear')
 
-probabilities = Probabilities()
+probability = Probabilities.Probabilities()
 
+print(probability.getEmissionProbability("The","DET"))
+print(probability.getTransitionProbability("VERB","DET"))
 
 
