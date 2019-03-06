@@ -1,5 +1,7 @@
 from nltk.corpus import brown
 from nltk import FreqDist, WittenBellProbDist
+import numpy as np
+
 class Probabilities:
     
     emitted = []
@@ -25,14 +27,15 @@ class Probabilities:
     def createTransitionProbabilities(self):
         smoothed = {}
         for tag in self.tags:
-            print(tag)
             words = [w for (t,w) in self.tagsTupples if t == tag]
             smoothed[tag] = WittenBellProbDist(FreqDist(words), bins=1e5)
         self.transitionProbability = smoothed
 
     def __init__(self):
         sentence = brown.tagged_sents(tagset='universal')
-        self.emitted = sentence[0]
+        self.emitted = sentence[0:2500]
+        mitted = np.asarray(self.emitted).reshape(-1).tolist()
+
         self.allWords = [w for (w,_) in self.emitted]
         self.tags = [t for (_,t) in self.emitted]
         for i in range(len(self.tags)-1):
