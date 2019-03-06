@@ -26,15 +26,22 @@ class Probabilities:
 
     def createTransitionProbabilities(self):
         smoothed = {}
-        for tag in self.tags:
+        for tag in self.uniqueTags:
             words = [w for (t,w) in self.tagsTupples if t == tag]
             smoothed[tag] = WittenBellProbDist(FreqDist(words), bins=1e5)
         self.transitionProbability = smoothed
 
+    def reshapeTheList(self, array):
+        resultingArray = []
+        for sentence in array:
+            for word in sentence:
+                resultingArray.append(word)
+        return resultingArray
+    
     def __init__(self):
         sentence = brown.tagged_sents(tagset='universal')
-        self.emitted = sentence[0:2500]
-        mitted = np.asarray(self.emitted).reshape(-1).tolist()
+        self.emitted = sentence[0:4500]
+        self.emitted = self.reshapeTheList(self.emitted)
 
         self.allWords = [w for (w,_) in self.emitted]
         self.tags = [t for (_,t) in self.emitted]
