@@ -14,6 +14,6 @@ print(sentence[51605])
 #print(probability.getTransitionProbability("NOUN","DET"))
 
 import ViterbiTagging
-#ViterbiTagging.printEmissionProbabilities(probability,sentence[51605])
+ViterbiTagging.printEmissionProbabilities(probability,sentence[51605])
 ViterbiTagging.printTransitionProbabilities(probability)
 

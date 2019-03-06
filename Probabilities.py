@@ -34,10 +34,17 @@ class Probabilities:
     def reshapeTheList(self, array):
         resultingArray = []
         for sentence in array:
+            resultingArray.append(tuple(['SOS','<s>']))
             for word in sentence:
                 resultingArray.append(word)
+            resultingArray.append(tuple(['EOS','</s>']))
         return resultingArray
-    
+
+    def makeListOfTupplesOfTags(self, tagsList):
+        for i in range(len(tagsList)-1):
+            if (tagsList[i] != '</s>'):
+                self.tagsTupples.append((tagsList[i],tagsList[i+1]))
+
     def __init__(self):
         sentence = brown.tagged_sents(tagset='universal')
         self.emitted = sentence[0:51605]
@@ -45,8 +52,8 @@ class Probabilities:
 
         self.allWords = [w for (w,_) in self.emitted]
         self.tags = [t for (_,t) in self.emitted]
-        for i in range(len(self.tags)-1):
-            self.tagsTupples.append((self.tags[i],self.tags[i+1]))
+        self.makeListOfTupplesOfTags(self.tags)
+
         self.uniqueTags = set(self.tags)
 
         self.createEmissionProbabilities()

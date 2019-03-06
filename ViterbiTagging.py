@@ -10,3 +10,4 @@ def printTransitionProbabilities(probability):
     for tag in possibleTags:    
         for givenTag in possibleTags:
             print("P(",tag,"|",givenTag,") = ",probability.getTransitionProbability(tag,givenTag))
+
