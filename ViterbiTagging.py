@@ -31,6 +31,13 @@ class ViterbiTagger:
         IndexOfMaximum = listOfPossibleViterbiProb.index(maximumValue)
         return (maximumValue, self.tagsPossible[IndexOfMaximum])
     
+    def getTags(self):
+        taglist = []
+        for i in range(len(self.sentance)):
+            maxim = max(v[i] for v in self.viterbi)
+            taglist.append(self.backpointer[[row[i] for row in self.viterbi].index(maxim)][i])
+        return(taglist)
+
     def __init__(self, probability, sentance):
         self.tagsPossible = list(probability.uniqueTags)
         self.tagsPossible.remove('</s>')
@@ -55,7 +62,4 @@ class ViterbiTagger:
                 endProbability = viterbiOfPrevious*transitionProbability
                 self.backpointer[:].append(self.tagsPossible[t])
 
-
-
-        print(sentance)
-        print(probability.uniqueTags)
+        print(self.getTags())

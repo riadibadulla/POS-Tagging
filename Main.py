@@ -10,8 +10,8 @@ sentences = brown.tagged_sents(tagset='universal')
 #print(probability.getEmissionProbability("game","NOUN"))
 #print(probability.getTransitionProbability("NOUN","DET"))
 
-#print(sentences[51605])
-onlyWords = [w for (w,t) in sentences[51605][0:5]]
+print(sentences[51605])
+onlyWords = [w for (w,t) in sentences[51605]]
 
 #ViterbiTagging.printEmissionProbabilities(probability,sentences[51605][0:5])
 #ViterbiTagging.printTransitionProbabilities(probability)
