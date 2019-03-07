@@ -38,14 +38,21 @@ class ViterbiTagger:
             taglist.append(self.backpointer[[row[i] for row in self.viterbi].index(maxim)][i])
         return(taglist)
 
-    def __init__(self, probability, sentance):
+    def __init__(self, probability):
+        self.viterbi = []
+        self.sentance = []
+        self.backpointer = []
+
         self.tagsPossible = list(probability.uniqueTags)
         self.tagsPossible.remove('</s>')
         self.probability = probability
+        
+    
+    def tagTheSentance(self, sentance):
         self.sentance = sentance
 
         for tag in self.tagsPossible:
-            self.viterbi.append([probability.getTransitionProbability(tag,'<s>')*probability.getEmissionProbability(sentance[0],tag)])
+            self.viterbi.append([self.probability.getTransitionProbability(tag,'<s>')*self.probability.getEmissionProbability(sentance[0],tag)])
             self.backpointer.append(['<s>'])
 
         for w in range(1,len(sentance)):
@@ -61,5 +68,8 @@ class ViterbiTagger:
             if (viterbiOfPrevious*transitionProbability > endProbability):
                 endProbability = viterbiOfPrevious*transitionProbability
                 self.backpointer[:].append(self.tagsPossible[t])
+        
+        result = self.getTags()
+        result.pop(0)
+        return result
 
-        print(self.getTags())
