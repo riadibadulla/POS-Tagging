@@ -1,19 +1,19 @@
 import os
 import Probabilities
+import ViterbiTagging
 from nltk.corpus import brown
 os.system('clear')
 
 probability = Probabilities.Probabilities()
 
-sentence = brown.tagged_sents(tagset='universal')
-
-#self.allWords = [w for (w,_) in self.emitted]
-print(sentence[51605])
-
+sentences = brown.tagged_sents(tagset='universal')
 #print(probability.getEmissionProbability("game","NOUN"))
 #print(probability.getTransitionProbability("NOUN","DET"))
 
-import ViterbiTagging
-ViterbiTagging.printEmissionProbabilities(probability,sentence[51605])
-ViterbiTagging.printTransitionProbabilities(probability)
+#print(sentences[51605])
+onlyWords = [w for (w,t) in sentences[51605][0:5]]
+
+#ViterbiTagging.printEmissionProbabilities(probability,sentences[51605][0:5])
+#ViterbiTagging.printTransitionProbabilities(probability)
+viterbi = ViterbiTagging.ViterbiTagger(probability,onlyWords)
 
