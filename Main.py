@@ -17,17 +17,15 @@ def getAccuracy(originalSentence, predictedTags):
 
 
 probability = Probabilities.Probabilities()
-
 sentences = brown.tagged_sents(tagset='universal')
-#print(probability.getEmissionProbability("game","NOUN"))
-#print(probability.getTransitionProbability("NOUN","DET"))
 
-for i in range(51605,len(sentences)-1):
-    onlyWords = [w for (w,t) in sentences[i]]
-    viterbi = ViterbiTagging.ViterbiTagger(probability)
-    tagsPredicted = viterbi.tagTheSentance(onlyWords)
-    del viterbi
-    print(getAccuracy(sentences[i],tagsPredicted))
+def testViterbi():
+    for i in range(51605,len(sentences)-1):
+        onlyWords = [w for (w,t) in sentences[i]]
+        viterbi = ViterbiTagging.ViterbiTagger(probability)
+        tagsPredicted = viterbi.tagTheSentance(onlyWords)
+        del viterbi
+        print(getAccuracy(sentences[i],tagsPredicted))
 
-
+testViterbi()
 
