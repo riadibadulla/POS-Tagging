@@ -6,6 +6,7 @@ class ViterbiTagger:
     probability = None
     sentance = []
     backpointer = []
+    resultingTag = []
 
     def printEmissionProbabilities(self, sentence):
         possibleTags = self.probability.uniqueTags
@@ -31,12 +32,22 @@ class ViterbiTagger:
         IndexOfMaximum = listOfPossibleViterbiProb.index(maximumValue)
         return (maximumValue, self.tagsPossible[IndexOfMaximum])
     
+    """
     def getTags(self):
         taglist = []
         for i in range(len(self.sentance)):
             maxim = max(v[i] for v in self.viterbi)
             taglist.append(self.backpointer[[row[i] for row in self.viterbi].index(maxim)][i])
         return(taglist)
+"""
+    def recursive(self,tag, i):
+        if (i > 0):
+            self.resultingTag.append(self.backpointer[self.tagsPossible.index(tag)][i])
+            self.gettags(self.backpointer[self.tagsPossible.index(tag)][i-1])
+
+    def getTags(self,lastTag):
+        self.resultingTag.append(lastTag)
+        self.recursive(lastTag, len(self.backpointer)+1)
 
     def __init__(self, probability):
         self.viterbi = []
@@ -61,15 +72,17 @@ class ViterbiTagger:
                 self.viterbi[t].append(maximumViterbi[0])
                 self.backpointer[t].append(maximumViterbi[1])
 
+
         endProbability = 0
+        lasTag = ''
         for t in range(len(self.tagsPossible)):
             viterbiOfPrevious = self.viterbi[t][len(sentance)-1]
             transitionProbability = self.probability.getTransitionProbability('</s>', self.tagsPossible[t])
             if (viterbiOfPrevious*transitionProbability > endProbability):
                 endProbability = viterbiOfPrevious*transitionProbability
-                self.backpointer[:].append(self.tagsPossible[t])
+                lastTag = self.tagsPossible[t]
         
-        result = self.getTags()
+        result = self.getTags(lasTag)
         result.pop(0)
         return result
 

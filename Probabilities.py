@@ -47,7 +47,8 @@ class Probabilities:
 
     def __init__(self):
         sentence = brown.tagged_sents(tagset='universal')
-        self.emitted = sentence[0:51605]
+        #self.emitted = sentence[0:51605]
+        self.emitted = sentence[0:100]
         self.emitted = self.reshapeTheList(self.emitted)
 
         self.allWords = [w for (w,_) in self.emitted]

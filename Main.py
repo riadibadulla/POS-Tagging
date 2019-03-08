@@ -1,6 +1,7 @@
 import os
 import Probabilities
 import ViterbiTagging
+import EagerTagging
 from nltk.corpus import brown
 os.system('clear')
 
@@ -27,5 +28,20 @@ def testViterbi():
         del viterbi
         print(getAccuracy(sentences[i],tagsPredicted))
 
-testViterbi()
+#testViterbi()
 
+def testEager():
+    for i in range(51605,len(sentences)-1):
+        onlyWords = [w for (w,t) in sentences[i]]
+        eager = EagerTagging.Eager(probability)
+        tagsPredicted = eager.tagTheSentance(onlyWords)
+        del eager
+        print(getAccuracy(sentences[i],tagsPredicted))
+
+#testEager()
+
+onlyWords = [w for (w,t) in sentences[5500]]
+print(sentences[5500][0:3])
+eager = ViterbiTagging.ViterbiTagger(probability)
+tagsPredicted = eager.tagTheSentance(onlyWords)
+print(tagsPredicted)
