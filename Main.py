@@ -11,7 +11,7 @@ def getAccuracy(originalSentence, predictedTags):
     originalTags = [t for (w,t) in originalSentence]
     numberOfRughtPrediction = 0
 
-    for i in range(numberOfWords-1):
+    for i in range(numberOfWords):
         if (originalTags[i] == predictedTags[i]):
             numberOfRughtPrediction+=1
     return numberOfRughtPrediction/numberOfWords
@@ -27,8 +27,9 @@ def testViterbi():
         tagsPredicted = viterbi.tagTheSentance(onlyWords)
         del viterbi
         print(getAccuracy(sentences[i],tagsPredicted))
+        print(i)
 
-#testViterbi()
+testViterbi()
 
 def testEager():
     for i in range(51605,len(sentences)-1):
@@ -39,9 +40,8 @@ def testEager():
         print(getAccuracy(sentences[i],tagsPredicted))
 
 #testEager()
-
-onlyWords = [w for (w,t) in sentences[5500]]
-print(sentences[5500][0:3])
-eager = ViterbiTagging.ViterbiTagger(probability)
-tagsPredicted = eager.tagTheSentance(onlyWords)
-print(tagsPredicted)
+"""
+onlyWords = [w for (w,t) in sentences[53010]]
+viterbi = ViterbiTagging.ViterbiTagger(probability)
+tagsPredicted = viterbi.tagTheSentance(onlyWords)
+print(tagsPredicted)"""

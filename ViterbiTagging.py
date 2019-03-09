@@ -43,16 +43,19 @@ class ViterbiTagger:
     def recursive(self,tag, i):
         if (i > 0):
             self.resultingTag.append(self.backpointer[self.tagsPossible.index(tag)][i])
-            self.gettags(self.backpointer[self.tagsPossible.index(tag)][i-1])
+            self.recursive(self.backpointer[self.tagsPossible.index(tag)][i-1],i-1)
+        else:
+            return -1
 
     def getTags(self,lastTag):
         self.resultingTag.append(lastTag)
-        self.recursive(lastTag, len(self.backpointer)+1)
+        self.recursive(lastTag, len(self.backpointer[0])-1)
 
     def __init__(self, probability):
         self.viterbi = []
         self.sentance = []
         self.backpointer = []
+        self.resultingTag = []
 
         self.tagsPossible = list(probability.uniqueTags)
         self.tagsPossible.remove('</s>')
@@ -74,15 +77,14 @@ class ViterbiTagger:
 
 
         endProbability = 0
-        lasTag = ''
+        lasTag = '<s>'
         for t in range(len(self.tagsPossible)):
             viterbiOfPrevious = self.viterbi[t][len(sentance)-1]
             transitionProbability = self.probability.getTransitionProbability('</s>', self.tagsPossible[t])
             if (viterbiOfPrevious*transitionProbability > endProbability):
                 endProbability = viterbiOfPrevious*transitionProbability
-                lastTag = self.tagsPossible[t]
+                lasTag = self.tagsPossible[t]
         
-        result = self.getTags(lasTag)
-        result.pop(0)
-        return result
+        self.getTags(lasTag)
+        return list(reversed(self.resultingTag))
 
