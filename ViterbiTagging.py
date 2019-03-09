@@ -31,15 +31,7 @@ class ViterbiTagger:
         maximumValue = max(listOfPossibleViterbiProb)
         IndexOfMaximum = listOfPossibleViterbiProb.index(maximumValue)
         return (maximumValue, self.tagsPossible[IndexOfMaximum])
-    
-    """
-    def getTags(self):
-        taglist = []
-        for i in range(len(self.sentance)):
-            maxim = max(v[i] for v in self.viterbi)
-            taglist.append(self.backpointer[[row[i] for row in self.viterbi].index(maxim)][i])
-        return(taglist)
-"""
+
     def recursive(self,tag, i):
         if (i > 0):
             self.resultingTag.append(self.backpointer[self.tagsPossible.index(tag)][i])

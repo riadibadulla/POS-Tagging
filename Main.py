@@ -29,19 +29,14 @@ def testViterbi():
         print(getAccuracy(sentences[i],tagsPredicted))
         print(i)
 
-testViterbi()
+#testViterbi()
 
 def testEager():
     for i in range(51605,len(sentences)-1):
         onlyWords = [w for (w,t) in sentences[i]]
-        eager = EagerTagging.Eager(probability)
+        eager = EagerTagging.Eager(probability, 1)
         tagsPredicted = eager.tagTheSentance(onlyWords)
         del eager
         print(getAccuracy(sentences[i],tagsPredicted))
 
-#testEager()
-"""
-onlyWords = [w for (w,t) in sentences[53010]]
-viterbi = ViterbiTagging.ViterbiTagger(probability)
-tagsPredicted = viterbi.tagTheSentance(onlyWords)
-print(tagsPredicted)"""
+testEager()
