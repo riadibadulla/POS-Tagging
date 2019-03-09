@@ -1,4 +1,4 @@
-class ViterbiTagger:
+class Eager:
     tagsPossible = []
     viterbi = []
     probability = None
@@ -23,10 +23,10 @@ class ViterbiTagger:
     def getMaxViterbiProbabilityForState(self, tagIndex, wordIndex):
         listOfPossibleViterbiProb = []
         for tag in self.tagsPossible:
-            viterbiOfPrevious = self.viterbi[self.tagsPossible.index(tag)][wordIndex-1]
-            emissionProbability = self.probability.getEmissionProbability(self.sentance[wordIndex],self.tagsPossible[tagIndex])
-            transitionalProbability = self.probability.getTransitionProbability(self.tagsPossible[tagIndex], tag)
-            listOfPossibleViterbiProb.append(viterbiOfPrevious*emissionProbability*transitionalProbability)
+            if (self.viterbi[self.tagsPossible.index(tag)][wordIndex-1] != 0):
+                emissionProbability = self.probability.getEmissionProbability(self.sentance[wordIndex],self.tagsPossible[tagIndex])
+                transitionalProbability = self.probability.getTransitionProbability(self.tagsPossible[tagIndex], tag)
+                listOfPossibleViterbiProb.append(emissionProbability*transitionalProbability)
         maximumValue = max(listOfPossibleViterbiProb)
         IndexOfMaximum = listOfPossibleViterbiProb.index(maximumValue)
         return (maximumValue, self.tagsPossible[IndexOfMaximum])
@@ -77,6 +77,7 @@ class ViterbiTagger:
                 maximumViterbi = self.getMaxViterbiProbabilityForState(t,w)
                 self.viterbi[t].append(maximumViterbi[0])
                 self.backpointer[t].append(maximumViterbi[1])
+                self.keepMaximum(w)
 
 
         endProbability = 0
