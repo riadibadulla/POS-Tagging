@@ -24,11 +24,10 @@ class Eager:
     def getMaxViterbiProbabilityForState(self, tagIndex, wordIndex):
         listOfPossibleViterbiProb = []
         for tag in self.tagsPossible:
-            if (self.viterbi[self.tagsPossible.index(tag)][wordIndex-1] != 0):
-                viterbiOfPrevious = self.viterbi[self.tagsPossible.index(tag)][wordIndex-1]
-                emissionProbability = self.probability.getEmissionProbability(self.sentance[wordIndex],self.tagsPossible[tagIndex])
-                transitionalProbability = self.probability.getTransitionProbability(self.tagsPossible[tagIndex], tag)
-                listOfPossibleViterbiProb.append(viterbiOfPrevious*emissionProbability*transitionalProbability)
+            viterbiOfPrevious = self.viterbi[self.tagsPossible.index(tag)][wordIndex-1]
+            emissionProbability = self.probability.getEmissionProbability(self.sentance[wordIndex],self.tagsPossible[tagIndex])
+            transitionalProbability = self.probability.getTransitionProbability(self.tagsPossible[tagIndex], tag)
+            listOfPossibleViterbiProb.append(viterbiOfPrevious*emissionProbability*transitionalProbability)
         try:
             maximumValue = max(listOfPossibleViterbiProb)
         except:

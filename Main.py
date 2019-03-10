@@ -48,7 +48,7 @@ def testEager():
     arrayOfAccuracies = []    
     for i in range(51605,len(sentences)-1):
         onlyWords = [w for (w,t) in sentences[i]]
-        eager = EagerTagging.Eager(probability, 2)
+        eager = EagerTagging.Eager(probability, 1)
         tagsPredicted = eager.tagTheSentance(onlyWords)
         if (tagsPredicted == []):
             print(i," is underflow")    
