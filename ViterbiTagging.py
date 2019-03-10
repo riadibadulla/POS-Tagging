@@ -69,7 +69,7 @@ class ViterbiTagger:
 
 
         endProbability = 0
-        lasTag = '<s>'
+        lasTag = ''
         for t in range(len(self.tagsPossible)):
             viterbiOfPrevious = self.viterbi[t][len(sentance)-1]
             transitionProbability = self.probability.getTransitionProbability('</s>', self.tagsPossible[t])
@@ -77,6 +77,9 @@ class ViterbiTagger:
                 endProbability = viterbiOfPrevious*transitionProbability
                 lasTag = self.tagsPossible[t]
         
-        self.getTags(lasTag)
+        if (lasTag != ''):
+            self.getTags(lasTag)
+        else:
+            return []
         return list(reversed(self.resultingTag))
 

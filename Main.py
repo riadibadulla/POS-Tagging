@@ -21,22 +21,39 @@ probability = Probabilities.Probabilities()
 sentences = brown.tagged_sents(tagset='universal')
 
 def testViterbi():
+    arrayOfAccuracies = []    
     for i in range(51605,len(sentences)-1):
         onlyWords = [w for (w,t) in sentences[i]]
         viterbi = ViterbiTagging.ViterbiTagger(probability)
         tagsPredicted = viterbi.tagTheSentance(onlyWords)
-        del viterbi
-        print(getAccuracy(sentences[i],tagsPredicted))
-        print(i)
+        if (tagsPredicted == []):
+            print(i," is underflow")    
+            continue
+        arrayOfAccuracies.append(getAccuracy(sentences[i],tagsPredicted))
+    print(sum(arrayOfAccuracies)/len(arrayOfAccuracies))
 
+
+#53010 was underflow
 #testViterbi()
 
+
+#onlyWords = ['The', 'purge', 'has', 'taken' '.']
+# onlyWords = [w for (w,t) in sentences[5020]]
+# print([t for (w,t) in sentences[5020]])
+# eager = EagerTagging.Eager(probability, 2)
+# tagsPredicted = eager.tagTheSentance(onlyWords)
+# print(tagsPredicted)
+
 def testEager():
+    arrayOfAccuracies = []    
     for i in range(51605,len(sentences)-1):
         onlyWords = [w for (w,t) in sentences[i]]
-        eager = EagerTagging.Eager(probability, 1)
+        eager = EagerTagging.Eager(probability, 2)
         tagsPredicted = eager.tagTheSentance(onlyWords)
-        del eager
-        print(getAccuracy(sentences[i],tagsPredicted))
+        if (tagsPredicted == []):
+            print(i," is underflow")    
+            continue
+        arrayOfAccuracies.append(getAccuracy(sentences[i],tagsPredicted))
+    print(sum(arrayOfAccuracies)/len(arrayOfAccuracies))
 
 testEager()
