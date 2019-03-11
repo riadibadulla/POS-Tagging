@@ -2,6 +2,7 @@ import os
 import Probabilities
 import ViterbiTagging
 import EagerTagging
+import ForwardBackward
 from nltk.corpus import brown
 os.system('clear')
 
@@ -52,6 +53,20 @@ def testEager():
         tagsFromCorpus.extend(tags[:])
     print("eager ",getAccuracy(tagsFromCorpus,allTagsPredcited))
 
+def testFB():
+    allTagsPredcited = []
+    tagsFromCorpus = []   
+    for i in range(10000,10500):
+        onlyWords = [w for (w,t) in sentences[i]]
+        tags = [t for (w,t) in sentences[i]]
+        forward = ForwardBackward.FBTagger(probability)
+        tagsPredicted = forward.tagTheSentance(onlyWords)
+        if (tagsPredicted == []):
+            print(i," is underflow")    
+            continue
+        allTagsPredcited.extend(tagsPredicted[:])
+        tagsFromCorpus.extend(tags[:])
+    print("FB ",getAccuracy(tagsFromCorpus,allTagsPredcited))
 
 def compareAlgorithms():
     for i in range(10257,10258):
@@ -63,7 +78,7 @@ def compareAlgorithms():
         #print(tagsPredicted)
         #print(tags)
         viterbiaAc = getAccuracy(tags,tagsPredicted)
-        eager = EagerTagging.Eager(probability, 1)
+        eager = EagerTagging.Eager(probability, 14)
         tagsPredicted = eager.tagTheSentance(onlyWords)
         eagAc = getAccuracy(tags,tagsPredicted)
         if viterbiaAc < eagAc:
@@ -71,15 +86,6 @@ def compareAlgorithms():
 
 #compareAlgorithms()
 
-testViterbi()
-testEager()
-
-
-# onlyWords = [w for (w,t) in sentences[10257]]
-# tags = [t for (w,t) in sentences[10257]]
-# viterbi = ViterbiTagging.ViterbiTagger(probability)
-# tagsPredicted = viterbi.tagTheSentance(onlyWords)
-# print(onlyWords)
-# print(tagsPredicted)
-# print(tags)
-# print(getAccuracy(tags,tagsPredicted))
+#testViterbi()
+#testEager()
+testFB()

@@ -8,19 +8,6 @@ class Eager:
     K = 1
     fail = False
 
-    def printEmissionProbabilities(self, sentence):
-        possibleTags = self.probability.uniqueTags
-        words = [w for (w,_) in sentence]
-        for word in words:    
-            for tag in possibleTags:
-                print("P(",word,"|",tag,") = ",self.probability.getEmissionProbability(word,tag))
-
-    def printTransitionProbabilities(self, probability):
-        possibleTags = probability.uniqueTags
-        for tag in possibleTags:    
-            for givenTag in possibleTags:
-                print("P(",tag,"|",givenTag,") = ",self.probability.getTransitionProbability(tag,givenTag))
-
     def getMaxViterbiProbabilityForState(self, tagIndex, wordIndex):
         listOfPossibleViterbiProb = []
         for tag in self.tagsPossible:
