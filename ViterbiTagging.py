@@ -34,8 +34,9 @@ class ViterbiTagger:
 
     def recursive(self,tag, i):
         if (i > 0):
-            self.resultingTag.append(self.backpointer[self.tagsPossible.index(tag)][i])
-            self.recursive(self.backpointer[self.tagsPossible.index(tag)][i-1],i-1)
+            tag = self.backpointer[self.tagsPossible.index(tag)][i]
+            self.resultingTag.append(tag)
+            self.recursive(tag,i-1)
         else:
             return -1
 

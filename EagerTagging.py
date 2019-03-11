@@ -24,10 +24,13 @@ class Eager:
     def getMaxViterbiProbabilityForState(self, tagIndex, wordIndex):
         listOfPossibleViterbiProb = []
         for tag in self.tagsPossible:
-            viterbiOfPrevious = self.viterbi[self.tagsPossible.index(tag)][wordIndex-1]
-            emissionProbability = self.probability.getEmissionProbability(self.sentance[wordIndex],self.tagsPossible[tagIndex])
-            transitionalProbability = self.probability.getTransitionProbability(self.tagsPossible[tagIndex], tag)
-            listOfPossibleViterbiProb.append(viterbiOfPrevious*emissionProbability*transitionalProbability)
+            if (self.viterbi[self.tagsPossible.index(tag)][wordIndex-1] != 2):
+                viterbiOfPrevious = self.viterbi[self.tagsPossible.index(tag)][wordIndex-1]
+                emissionProbability = self.probability.getEmissionProbability(self.sentance[wordIndex],self.tagsPossible[tagIndex])
+                transitionalProbability = self.probability.getTransitionProbability(self.tagsPossible[tagIndex], tag)
+                listOfPossibleViterbiProb.append(viterbiOfPrevious*emissionProbability*transitionalProbability)
+            else:
+                listOfPossibleViterbiProb.append(-1)
         try:
             maximumValue = max(listOfPossibleViterbiProb)
         except:
@@ -38,8 +41,9 @@ class Eager:
 
     def recursive(self,tag, i):
         if (i > 0):
-            self.resultingTag.append(self.backpointer[self.tagsPossible.index(tag)][i])
-            self.recursive(self.backpointer[self.tagsPossible.index(tag)][i-1],i-1)
+            tag = self.backpointer[self.tagsPossible.index(tag)][i]
+            self.resultingTag.append(tag)
+            self.recursive(tag,i-1)
         else:
             return -1
 
@@ -57,7 +61,8 @@ class Eager:
         
         for i in range(len(self.viterbi)):
             if i not in maximumTagsFound:
-                self.viterbi[i][wordIndex] = 0
+                self.viterbi[i][wordIndex] = 2
+                self.backpointer[i][wordIndex] = ''
 
     def __init__(self, probability, K):
         self.viterbi = []
@@ -66,12 +71,30 @@ class Eager:
         self.resultingTag = []
         self.K = K
         self.fail = False
-
+        self.tagsPossible =[]
         self.tagsPossible = list(probability.uniqueTags)
         self.tagsPossible.remove('</s>')
         self.tagsPossible.remove('<s>')
         self.probability = probability
         
+    
+    def getLastTag(self, sentance):
+        listOfProbabilities = []
+        for t in range(len(self.tagsPossible)):
+            if (self.viterbi[t][len(sentance)-1] != 2):
+                viterbiOfPrevious = self.viterbi[t][len(sentance)-1]
+                transitionProbability = self.probability.getTransitionProbability('</s>', self.tagsPossible[t])
+                prob = viterbiOfPrevious*transitionProbability
+                listOfProbabilities.append(prob)
+            else:
+                listOfProbabilities.append(-1)
+        try:
+            maximumValue = max(listOfProbabilities)
+        except:
+            self.fail = True
+            return (0, 'Underflow')    
+        IndexOfMaximum = listOfProbabilities.index(maximumValue)
+        return self.tagsPossible[IndexOfMaximum]
     
     def tagTheSentance(self, sentance):
         self.sentance = sentance
@@ -92,14 +115,7 @@ class Eager:
             self.keepMaximum(w)
 
 
-        endProbability = 0
-        lasTag = ''
-        for t in range(len(self.tagsPossible)):
-            viterbiOfPrevious = self.viterbi[t][len(sentance)-1]
-            transitionProbability = self.probability.getTransitionProbability('</s>', self.tagsPossible[t])
-            if (viterbiOfPrevious*transitionProbability > endProbability):
-                endProbability = viterbiOfPrevious*transitionProbability
-                lasTag = self.tagsPossible[t]
+        lasTag = self.getLastTag(sentance)
         
         if (lasTag != ''):
             self.getTags(lasTag)
