@@ -40,11 +40,12 @@ def testViterbi():
 
 def testEager():
     allTagsPredcited = []
-    tagsFromCorpus = []   
+    tagsFromCorpus = []
+    tagsPredicted = []
     for i in range(10000,10500):
         onlyWords = [w for (w,t) in sentences[i]]
         tags = [t for (w,t) in sentences[i]]
-        eager = EagerTagging.Eager(probability, 1)
+        eager = EagerTagging.Eager(probability, 13)
         tagsPredicted = eager.tagTheSentance(onlyWords)
         if (tagsPredicted == []):
             print(i," is underflow")    
@@ -69,7 +70,7 @@ def testFB():
     print("FB ",getAccuracy(tagsFromCorpus,allTagsPredcited))
 
 def compareAlgorithms():
-    for i in range(10257,10258):
+    for i in range(10000,10500):
         onlyWords = [w for (w,t) in sentences[i]]
         tags = [t for (w,t) in sentences[i]]
         viterbi = ViterbiTagging.ViterbiTagger(probability)
@@ -78,14 +79,15 @@ def compareAlgorithms():
         #print(tagsPredicted)
         #print(tags)
         viterbiaAc = getAccuracy(tags,tagsPredicted)
-        eager = EagerTagging.Eager(probability, 14)
+        eager = EagerTagging.Eager(probability, 13)
         tagsPredicted = eager.tagTheSentance(onlyWords)
         eagAc = getAccuracy(tags,tagsPredicted)
-        if viterbiaAc < eagAc:
-            print(i)
+        print(viterbiaAc,'  ',eagAc)
+        print(i)
+        print(' ')
 
 #compareAlgorithms()
 
 #testViterbi()
-#testEager()
-testFB()
+testEager()
+#testFB()
