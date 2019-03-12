@@ -84,7 +84,11 @@ class FBTagger:
             for t in range(len(self.tagsPossible)):
                 transitionPr = self.probability.getTransitionProbability(self.tagsPossible[t], self.resultingTag[-1])
                 emissionPr = self.probability.getEmissionProbability(sentance[w],self.tagsPossible[t])
-                tagProbability = self.forwardProbabilities[t][w]*self.backwardProbabilities[self.tagsPossible.index(self.resultingTag[-1])][w]*transitionPr*emissionPr
+                fromBackWard = self.backwardProbabilities[self.tagsPossible.index(self.resultingTag[-1])][w]
+                #fromForward = self.forwardProbabilities[t][w+1]
+                fromForward = max([row[w+1] for row in self.forwardProbabilities])
+                tagProbability = fromBackWard*fromForward*transitionPr*emissionPr
+                
                 tagProbabilities.append(tagProbability)
             maximumProbabilityForTheWord = max(tagProbabilities)
             indexOfMaximumProbability = tagProbabilities.index(maximumProbabilityForTheWord)

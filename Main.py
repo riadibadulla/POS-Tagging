@@ -1,7 +1,7 @@
 import os
 import Probabilities
 import ViterbiTagging
-import EagerTagging
+import BeamSearch
 import ForwardBackward
 from nltk.corpus import brown
 os.system('clear')
@@ -29,30 +29,27 @@ def testViterbi():
         if (tagsPredicted == []):
             print(i," is underflow")    
             continue
-        #accuracyCurrent = getAccuracy(tags, tagsPredicted)
-        #if (accuracyCurrent < 0.9):
-         #   print(i,"  ",accuracyCurrent)
         allTagsPredcited.extend(tagsPredicted[:])
         tagsFromCorpus.extend(tags[:])
-    print("viterbi ",getAccuracy(tagsFromCorpus,allTagsPredcited))
+    print("Viterbi Accuracy ",getAccuracy(tagsFromCorpus,allTagsPredcited))
 
-#53010 was underflow
+#53010 gives underflow
 
-def testEager():
+def testBeam(K):
     allTagsPredcited = []
     tagsFromCorpus = []
     tagsPredicted = []
     for i in range(10000,10500):
         onlyWords = [w for (w,t) in sentences[i]]
         tags = [t for (w,t) in sentences[i]]
-        eager = EagerTagging.Eager(probability, 13)
-        tagsPredicted = eager.tagTheSentance(onlyWords)
+        beam = BeamSearch.Beam(probability, K)
+        tagsPredicted = beam.tagTheSentance(onlyWords)
         if (tagsPredicted == []):
             print(i," is underflow")    
             continue
         allTagsPredcited.extend(tagsPredicted[:])
         tagsFromCorpus.extend(tags[:])
-    print("eager ",getAccuracy(tagsFromCorpus,allTagsPredcited))
+    print("beam K=(",K,") Accuracy: ",getAccuracy(tagsFromCorpus,allTagsPredcited))
 
 def testFB():
     allTagsPredcited = []
@@ -67,27 +64,10 @@ def testFB():
             continue
         allTagsPredcited.extend(tagsPredicted[:])
         tagsFromCorpus.extend(tags[:])
-    print("FB ",getAccuracy(tagsFromCorpus,allTagsPredcited))
+    print("Forward Backward Accuracy: ",getAccuracy(tagsFromCorpus,allTagsPredcited))
 
-def compareAlgorithms():
-    for i in range(10000,10500):
-        onlyWords = [w for (w,t) in sentences[i]]
-        tags = [t for (w,t) in sentences[i]]
-        viterbi = ViterbiTagging.ViterbiTagger(probability)
-        tagsPredicted = viterbi.tagTheSentance(onlyWords)
-        #print(onlyWords)
-        #print(tagsPredicted)
-        #print(tags)
-        viterbiaAc = getAccuracy(tags,tagsPredicted)
-        eager = EagerTagging.Eager(probability, 13)
-        tagsPredicted = eager.tagTheSentance(onlyWords)
-        eagAc = getAccuracy(tags,tagsPredicted)
-        print(viterbiaAc,'  ',eagAc)
-        print(i)
-        print(' ')
 
-#compareAlgorithms()
-
-#testViterbi()
-testEager()
-#testFB()
+testViterbi()
+testBeam(1) #Maximum 13, which makes it Viterbi
+testBeam(2) #Maximum 13, which makes it Viterbi
+testFB()

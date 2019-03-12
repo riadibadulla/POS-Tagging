@@ -26,11 +26,14 @@ class Probabilities:
 
     def createTransitionProbabilities(self):
         smoothed = {}
+        
+        #In fact words here are tags
         for tag in self.uniqueTags:
             words = [w for (t,w) in self.tagsTupples if t == tag]
             smoothed[tag] = WittenBellProbDist(FreqDist(words), bins=1e5)
         self.transitionProbability = smoothed
 
+    """make all in 1d array, and and start and end of sentence."""
     def reshapeTheList(self, array):
         resultingArray = []
         for sentence in array:
@@ -40,6 +43,7 @@ class Probabilities:
             resultingArray.append(tuple(['EOS','</s>']))
         return resultingArray
 
+    """make bigrams"""
     def makeListOfTupplesOfTags(self, tagsList):
         for i in range(len(tagsList)-1):
             if (tagsList[i] != '</s>'):
@@ -60,8 +64,6 @@ class Probabilities:
         self.createEmissionProbabilities()
         self.createTransitionProbabilities()
     
-
-
     def getEmissionProbability(self,word, tag):
         return self.emissionProbability[tag].prob(word)
     
