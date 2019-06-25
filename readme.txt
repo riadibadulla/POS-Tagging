@@ -1,6 +1,4 @@
 Please use comand:
 Python3 Main.py
 
-
-
-PS. Python3 worked on lab machines
+The application uses Viterbi algorithm, Beam Search and Forward/Backward algorithms to tag the Parts of Speach.
